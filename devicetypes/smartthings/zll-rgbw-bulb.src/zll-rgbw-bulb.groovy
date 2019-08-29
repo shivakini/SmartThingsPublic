@@ -52,6 +52,8 @@ metadata {
         fingerprint profileId: "C05E", inClusters: "0000,0003,0004,0005,0006,0008,0300,1000", outClusters: "0019", manufacturer: "Philips", model: "LST002", deviceJoinName: "Philips Hue Lightstrip"
         fingerprint profileId: "C05E", inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300", outClusters: "0019", manufacturer: "innr", model: "RB 185 C", deviceJoinName: "Innr Smart Bulb Color"
         fingerprint profileId: "C05E", inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300", outClusters: "0019", manufacturer: "innr", model: "FL 130 C", deviceJoinName: "Innr Flex Light Color"
+        fingerprint profileId: "C05E", inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300, FFFF", outClusters: "0019", manufacturer: "Megaman", model: "ZLL-ExtendedColor", deviceJoinName: "INGENIUM ZB RGBW Light"
+		fingerprint profileId: "C05E", inClusters: "0000, 0003, 0004, 0005, 0006, 0008, 0300, FFFF, 0019", outClusters: "0019", deviceId: "0210", manufacturer: "AduroSmart Eria", model: "ZLL-ExtendedColor", deviceJoinName: "Eria ZLL RGBW Bulb"
     }
 
     // UI tile definitions
@@ -114,7 +116,7 @@ def parse(String description) {
         def zigbeeMap = zigbee.parseDescriptionAsMap(description)
         log.trace "zigbeeMap : $zigbeeMap"
 
-        if (zigbeeMap?.clusterInt == COLOR_CONTROL_CLUSTER) {
+        if (zigbeeMap?.clusterInt == COLOR_CONTROL_CLUSTER && zigbeeMap.value != null) {
             if(zigbeeMap.attrInt == ATTRIBUTE_HUE){  //Hue Attribute
                 def hueValue = Math.round(zigbee.convertHexToInt(zigbeeMap.value) / 0xfe * 100)
                 sendEvent(name: "hue", value: hueValue, displayed:false)
